@@ -65,6 +65,30 @@ funcBtns.forEach((funcBtn) => {
     });
 });
 
+
+document.addEventListener('keydown', (event) => {
+    if ((event.key == "+") || (event.key == "-") || (event.key == "*") || (event.key == "/")) {
+        keySelect = event.key; 
+        if ((display.textContent == "|") || (display.textContent == "ERROR")) {
+            display.textContent;
+        } else {
+            if ((display.textContent).length <= 20) {
+                display.textContent += keySelect;
+            }
+        }
+    } else if (Number(event.key)) {
+        keySelect = event.key; 
+        if ((display.textContent == "|") || (display.textContent == "ERROR")) {
+            display.textContent = '';
+            display.textContent += keySelect;
+        } else {
+            if ((display.textContent).length <= 20) {
+                display.textContent += keySelect;
+            }
+        }
+    };
+});
+
 let clrBtn = document.querySelector('#clrBtn')
 clrBtn.addEventListener('click', () => {
     display.textContent = '|';
@@ -73,25 +97,27 @@ clrBtn.addEventListener('click', () => {
 let equals = document.querySelector('#equBtn')
 equBtn.addEventListener('click', () => {
     let numIn1 = '';
-    let numIn2 = '';
+    let numArray = [];
     let operator = [];
     inCharacters = display.textContent.split('');
-    inCharacters.forEach(function(inCharacter) {
+    inCharacters.map(function(inCharacter) {
         if (isNaN(inCharacter)) {
-            operator.push(inCharacter);
-        } else if (Number(inCharacter) && (operator.length == 0)) {
-            numIn1 += inCharacter;
-        } else if (Number(inCharacter) && (operator.length == 1)) {
-            numIn2 += inCharacter;
+            operator.push(inCharacter); 
+        } else if (Number(inCharacter)) {
+            for (i = 0; i <= operator.length; i++) {
+                numIn1 = '';
+                numIn1 += inCharacter;
+                numArray.push(numIn1);
+            }
         }
     });
 
     console.log(operator);
     console.log(numIn1);
-    console.log(numIn2);
+    console.log(numArray);
     console.log(inCharacters);
 
-    let result = operate(numIn1, numIn2, operator);
+    let result = operate(numIn1, numArray, operator);
     if (String(result) === "NaN") {
         display.textContent = "ERROR";
     } else {
