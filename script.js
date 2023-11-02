@@ -43,6 +43,8 @@ numBtns.forEach((numBtn) => {
         if ((display.textContent == "|") || (display.textContent == "ERROR")) {
             display.textContent = '';
             display.textContent += numSelect;
+        } else if ((numSelect == ".") && ((display.textContent).includes("."))) {
+            display.textContent;
         } else {
             if ((display.textContent).length <= 20) {
                 display.textContent += numSelect;
@@ -76,11 +78,13 @@ document.addEventListener('keydown', (event) => {
                 display.textContent += keySelect;
             }
         }
-    } else if (Number(event.key)) {
+    } else if (Number(event.key) || (event.key = ".")) {
         keySelect = event.key; 
         if ((display.textContent == "|") || (display.textContent == "ERROR")) {
             display.textContent = '';
             display.textContent += keySelect;
+        } else if ((keySelect == ".") && ((display.textContent).includes("."))) {
+            display.textContent;
         } else {
             if ((display.textContent).length <= 20) {
                 display.textContent += keySelect;
@@ -89,8 +93,8 @@ document.addEventListener('keydown', (event) => {
     };
 });
 
-let clrBtn = document.querySelector('#clrBtn')
-clrBtn.addEventListener('click', () => {
+let clrBtn = document.querySelector('#numAC')
+numAC.addEventListener('click', () => {
     display.textContent = '|';
 })
 
