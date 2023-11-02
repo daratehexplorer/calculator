@@ -36,43 +36,36 @@ body {
     background-color: rgba(255, 255, 255);
  }
 
-.display {
+.screen {
     display: flex; 
-    justify-content: flex-end;
-    align-items: center;
+    flex-direction: column;
     height: 20%;
     width: 95%;
     border: 0.2vw solid black;
     border-radius: 0.5vw;
-    font-weight: bold;
-    font-size: 2.2vh; 
+    
     padding: 2%; 
     background-color: rgba(255, 255, 255);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
-/* .clrSection {
+.display {
+    height: 50%;
+    width: 100%;
     display: flex; 
     justify-content: flex-end;
-    align-items: center;
-    height: 10%;
-    width: 100%;
-    margin-right: 2%;
 }
 
-#clrBtn {
+#display {
     display: flex; 
-    justify-content: center;
     align-items: center;
-    border-radius: 0.45vw;
-    font-size: 1.5vh;
-    width: 20%;
-    height: 60%;
     font-weight: bold;
-    background-color: rgba(255, 255, 255);
-} */
+    font-size: 2.2vh; 
+}
+
+#history {
+
+    font-size: 1.5vh; 
+}
 
 /* Math Section */
 .mathSection {

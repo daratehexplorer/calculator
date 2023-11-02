@@ -31,18 +31,63 @@ operate = function(firstNum, secondNum, operator) {
     };
 }
 
-/* set up a function that splits display.textcontent into a string and then doesnt allow another operator to be added if the final character is already an operator */
-
 //Display Changes
-let display = document.querySelector('.display')
+let display = document.querySelector('#display')
+let history = document.querySelector('#history')
+const operator = [];
+const firstNum = [];
+
+let funcBtns = document.querySelectorAll('.funcBtn')
+funcBtns.forEach((funcBtn) => {
+    funcBtn.addEventListener('click', () => {
+        if (display.textContent == "|") {
+            display.textContent;
+        } else if (display.textContent == "ERROR") {
+            clearScreen();
+        } else if ((display.textContent).length > 0) {
+            updateHistory(funcBtn.textContent);
+        }
+        console.log(firstNum);
+        console.log(operator);
+    });
+});
 
 let numBtns = document.querySelectorAll('.numBtn')
 numBtns.forEach((numBtn) => {
     let numSelect = numBtn.textContent;
     numBtn.addEventListener('click', () => {
-        if ((display.textContent == "|") || (display.textContent == "ERROR")) {
+        if (display.textContent == "|") {
             display.textContent = '';
             display.textContent += numSelect;
+        } else if (display.textContent == "ERROR") {
+            clearScreen();
+            display.textContent = numSelect;
+        } else if ((numSelect == ".") && ((display.textContent).includes("."))) {
+            display.textContent;
+        } else if ((display.textContent).length <= 20) {
+                display.textContent += numSelect;
+        }
+    });
+});
+
+document.addEventListener('keydown', (event) => {
+    if ((event.key == "+") || (event.key == "-") || (event.key == "*") || (event.key == "/")) {
+        funcSelect = event.key; 
+        if (display.textContent == "|") {
+            display.textContent;
+        } else if (display.textContent == "ERROR") {
+            clearScreen();
+        } else if ((display.textContent).length > 0) {
+            updateHistory(event.key);
+        }
+    } else if (Number(event.key) || (event.key = ".")) {
+        numSelect = event.key;
+        if (display.textContent == "|") {
+            display.textContent = '';
+            display.textContent += numSelect;
+        } else if (display.textContent == "ERROR") {
+            clearScreen();
+            display.textContent = numSelect;
         } else if ((numSelect == ".") && ((display.textContent).includes("."))) {
             display.textContent;
         } else {
@@ -50,82 +95,44 @@ numBtns.forEach((numBtn) => {
                 display.textContent += numSelect;
             }
         }
-    });
-});
-
-let funcBtns = document.querySelectorAll('.funcBtn')
-funcBtns.forEach((funcBtn) => {
-    let funcSelect = funcBtn.textContent;
-    funcBtn.addEventListener('click', () => {
-        if ((display.textContent == "|") || (display.textContent == "ERROR")) {
-            display.textContent;
-        } else {
-            if ((display.textContent).length <= 20) {
-                display.textContent += funcSelect;
-            }
-        }
-    });
-});
-
-
-document.addEventListener('keydown', (event) => {
-    if ((event.key == "+") || (event.key == "-") || (event.key == "*") || (event.key == "/")) {
-        keySelect = event.key; 
-        if ((display.textContent == "|") || (display.textContent == "ERROR")) {
-            display.textContent;
-        } else {
-            if ((display.textContent).length <= 20) {
-                display.textContent += keySelect;
-            }
-        }
-    } else if (Number(event.key) || (event.key = ".")) {
-        keySelect = event.key; 
-        if ((display.textContent == "|") || (display.textContent == "ERROR")) {
-            display.textContent = '';
-            display.textContent += keySelect;
-        } else if ((keySelect == ".") && ((display.textContent).includes("."))) {
-            display.textContent;
-        } else {
-            if ((display.textContent).length <= 20) {
-                display.textContent += keySelect;
-            }
-        }
     };
 });
 
+function updateHistory(x) {
+    operator.push(x);
+    firstNum.push(display.textContent);
+    history.textContent += display.textContent;
+    history.textContent += x;
+    display.textContent = '';
+}
+
+function clearScreen() {
+    display.textContent = '|';
+    history.textContent = '';
+    operator = [];
+    firstNum = [];
+}
+
 let clrBtn = document.querySelector('#numAC')
 numAC.addEventListener('click', () => {
-    display.textContent = '|';
+    clearScreen();
 })
 
 let equals = document.querySelector('#equBtn')
 equBtn.addEventListener('click', () => {
-    let numIn1 = '';
-    let numArray = [];
-    let operator = [];
-    inCharacters = display.textContent.split('');
-    inCharacters.map(function(inCharacter) {
-        if (isNaN(inCharacter)) {
-            operator.push(inCharacter); 
-        } else if (Number(inCharacter)) {
-            for (i = 0; i <= operator.length; i++) {
-                numIn1 = '';
-                numIn1 += inCharacter;
-                numArray.push(numIn1);
+    if ((display.textContent != "") && (display.textContent != "|") && (display.textContent != "ERROR")) {
+        firstNum.push(display.textContent);
+        history.textContent += display.textContent;
+        console.log(firstNum);
+        for (i = 0; i < firstNum.length; i++) {
+            let secondNum = firstNum[i+1];
+            let result = operate(firstNum, secondNum, operator);
+            if (String(result) === "NaN") {
+                display.textContent = "ERROR";
+            } else {
+                display.textContent = result;
             }
         }
-    });
-
-    console.log(operator);
-    console.log(numIn1);
-    console.log(numArray);
-    console.log(inCharacters);
-
-    let result = operate(numIn1, numArray, operator);
-    if (String(result) === "NaN") {
-        display.textContent = "ERROR";
-    } else {
-        display.textContent = result;
     }
 });
 
