@@ -1,17 +1,17 @@
 // Math functions
-const add = function(a , b) {
+const add = function (a, b) {
     return Number(a) + Number(b);
 };
 
-const subtract = function(a , b) {
+const subtract = function (a, b) {
     return Number(a) - Number(b);
 };
 
-const multiply = function (a , b) {
+const multiply = function (a, b) {
     return Number(a) * Number(b);
 };
 
-const divide = function (a , b) {
+const divide = function (a, b) {
     if (Number(b) != 0) {
         return Number(a) / Number(b);
     } else {
@@ -19,14 +19,14 @@ const divide = function (a , b) {
     }
 };
 
-operate = function(firstNum, secondNum, operator) {
-    if (operator == "+") {
-       return add(firstNum, secondNum);
-    } else if (operator == "-") {
+function operate(firstNum, secondNum, operators) {
+    if (operators == "+") {
+        return add(firstNum, secondNum);
+    } else if (operators == "-") {
         return subtract(firstNum, secondNum);
-    } else if (operator == "*") {
+    } else if (operators == "*") {
         return multiply(firstNum, secondNum);
-    } else if (operator == "/") {
+    } else if (operators == "/") {
         return divide(firstNum, secondNum);
     };
 }
@@ -34,8 +34,10 @@ operate = function(firstNum, secondNum, operator) {
 //Display Changes
 let display = document.querySelector('#display')
 let history = document.querySelector('#history')
-const operator = [];
-const firstNum = [];
+let operators = [];
+let firstNum = [];
+let result = '';
+let i = 0;
 
 let funcBtns = document.querySelectorAll('.funcBtn')
 funcBtns.forEach((funcBtn) => {
@@ -44,11 +46,13 @@ funcBtns.forEach((funcBtn) => {
             display.textContent;
         } else if (display.textContent == "ERROR") {
             clearScreen();
-        } else if ((display.textContent).length > 0) {
+        } else if (((display.textContent).length > 0) && (result == "")) {
             updateHistory(funcBtn.textContent);
+        } else if (result != '') {
+            operators.push(funcBtn.textContent);
+            history.textContent = result + funcBtn.textContent;
+            display.textContent = '';
         }
-        console.log(firstNum);
-        console.log(operator);
     });
 });
 
@@ -56,23 +60,31 @@ let numBtns = document.querySelectorAll('.numBtn')
 numBtns.forEach((numBtn) => {
     let numSelect = numBtn.textContent;
     numBtn.addEventListener('click', () => {
-        if (display.textContent == "|") {
-            display.textContent = '';
-            display.textContent += numSelect;
-        } else if (display.textContent == "ERROR") {
+        if (display.textContent == "ERROR") {
             clearScreen();
             display.textContent = numSelect;
-        } else if ((numSelect == ".") && ((display.textContent).includes("."))) {
-            display.textContent;
-        } else if ((display.textContent).length <= 20) {
+        } else if (display.textContent == "|") {
+            if (numSelect == ".") {
+                if ((display.textContent).includes(".")) {
+                    display.textContent;
+                } else {
+                    display.textContent = "0.";
+                }
+            } else {
+                display.textContent = '';
                 display.textContent += numSelect;
+            } 
+        } else if ((display.textContent).length <= 20) {
+            display.textContent += numSelect;
         }
     });
 });
 
-document.addEventListener('keydown', (event) => {
-    if ((event.key == "+") || (event.key == "-") || (event.key == "*") || (event.key == "/")) {
-        funcSelect = event.key; 
+/* document.addEventListener('keydown', (event) => {
+    if (event.key == "=") {
+        getResult()
+    } else if ((event.key == "+") || (event.key == "-") || (event.key == "*") || (event.key == "/")) {
+        funcSelect = event.key;
         if (display.textContent == "|") {
             display.textContent;
         } else if (display.textContent == "ERROR") {
@@ -80,7 +92,7 @@ document.addEventListener('keydown', (event) => {
         } else if ((display.textContent).length > 0) {
             updateHistory(event.key);
         }
-    } else if (Number(event.key) || (event.key = ".")) {
+    } else if (Number(event.key) || (event.key == ".")) {
         numSelect = event.key;
         if (display.textContent == "|") {
             display.textContent = '';
@@ -96,10 +108,10 @@ document.addEventListener('keydown', (event) => {
             }
         }
     };
-});
+}); */
 
 function updateHistory(x) {
-    operator.push(x);
+    operators.push(x);
     firstNum.push(display.textContent);
     history.textContent += display.textContent;
     history.textContent += x;
@@ -109,8 +121,11 @@ function updateHistory(x) {
 function clearScreen() {
     display.textContent = '|';
     history.textContent = '';
-    operator = [];
+    operators = [];
     firstNum = [];
+    result = '';
+    resultTwo = '';
+    i = 0;
 }
 
 let clrBtn = document.querySelector('#numAC')
@@ -120,20 +135,61 @@ numAC.addEventListener('click', () => {
 
 let equals = document.querySelector('#equBtn')
 equBtn.addEventListener('click', () => {
-    if ((display.textContent != "") && (display.textContent != "|") && (display.textContent != "ERROR")) {
-        firstNum.push(display.textContent);
-        history.textContent += display.textContent;
-        console.log(firstNum);
-        for (i = 0; i < firstNum.length; i++) {
-            let secondNum = firstNum[i+1];
-            let result = operate(firstNum, secondNum, operator);
-            if (String(result) === "NaN") {
-                display.textContent = "ERROR";
-            } else {
-                display.textContent = result;
-            }
-        }
-    }
+    getResult();
 });
 
-/* maybe add a backspace button? */
+
+
+function getResult() {
+    if (result == '') {
+        if ((display.textContent != "") && (display.textContent != "|") && (display.textContent != "ERROR")) {
+            firstNum.push(display.textContent);
+            history.textContent += display.textContent;
+            
+            result = operate(firstNum[i], firstNum[i + 1], operators[i]);
+            i++;
+
+            console.log(firstNum);
+            console.log(operators);
+            console.log(result);
+
+            displayResult();
+        } 
+    } else if (result) {
+        if ((display.textContent == result) && (operators.length < firstNum.length)) {
+            i--
+            resultThree = operate(result, firstNum[i+1], operators[i])
+            result = resultThree;
+            i++;
+            
+            console.log(firstNum);
+            console.log(operators);
+            console.log(result);
+            
+            displayResult();
+        } else if ((display.textContent != "") && (display.textContent != "|") && (display.textContent != "ERROR")) {
+            firstNum.push(display.textContent);
+            history.textContent += display.textContent;
+            
+            resultTwo = operate(result, firstNum[i + 1], operators[i]);
+            result = resultTwo;
+            i++;
+            
+            console.log(firstNum);
+            console.log(operators);
+            console.log(result);
+            
+            displayResult();
+        }
+    } else if (display.textContent == "ERROR") {
+        clearScreen();
+    }
+};
+
+function displayResult() {
+    if ((String(result) == "undefined") || (operators.length > firstNum.length)) {
+        display.textContent = "ERROR";
+    } else {
+        display.textContent = result;
+    }
+}
